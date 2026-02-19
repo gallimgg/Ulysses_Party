@@ -6,12 +6,12 @@ console.log("app.js loaded at", new Date().toISOString());
 
 const SUPABASE_URL = "https://zxvsdhwgmhtmhjmaoadz.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_a7T2SKKrhnWqdV35YK8Wuw_h-auUpW9";
-window.__ulysses_supabase_client__ ??= window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY,
-  { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } }
-);
-const supabase = window.__ulysses_supabase_client__;
+
+// IMPORTANT: don't name any variable `supabase`
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+});
+
 
 // =====================
 // DOM
@@ -80,10 +80,11 @@ async function loadCharacters() {
 // LOAD PICKS (Supabase)
 // =====================
 async function loadPicks() {
-  const { data, error } = await supabase
-    .from("character_picks")
-    .select("character_id, character_name, user_name, picked_at")
-    .order("character_id", { ascending: true });
+  const { data, error } = await sb
+  .from("character_picks")
+  .select("character_id, character_name, user_name, picked_at")
+  .order("character_id", { ascending: true });
+
 
   if (error) throw error;
 
@@ -166,10 +167,10 @@ async function pickCharacter(character) {
   setStatus(`Saving your pick: ${character.name}...`);
 
   // character_id is PRIMARY KEY in the table, so only one person can take each id.
-  const { error } = await supabase.from("character_picks").insert([{
-    character_id: character.id,
-    character_name: character.name,
-    user_name: userName
+  const { error } = await sb.from("character_picks").insert([{
+  character_id: character.id,
+  character_name: character.name,
+  user_name: userName
   }]);
 
   if (error) {
@@ -192,17 +193,13 @@ async function refresh() {
 }
 
 function subscribeRealtime() {
-  supabase
-    .channel("character-picks-live")
-    .on(
-      "postgres_changes",
-      { event: "*", schema: "public", table: "character_picks" },
-      async () => {
-        try { await refresh(); } catch (_) {}
-      }
-    )
-    .subscribe();
-}
+sb
+  .channel("character-picks-live")
+  .on("postgres_changes",
+    { event: "*", schema: "public", table: "character_picks" },
+    async () => { try { await refresh(); } catch (_) {} }
+  )
+  .subscribe();
 
 // =====================
 // BOOT
