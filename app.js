@@ -6,7 +6,12 @@ console.log("app.js loaded at", new Date().toISOString());
 
 const SUPABASE_URL = "https://zxvsdhwgmhtmhjmaoadz.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_a7T2SKKrhnWqdV35YK8Wuw_h-auUpW9";
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+window.__ulysses_supabase_client__ ??= window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY,
+  { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } }
+);
+const supabase = window.__ulysses_supabase_client__;
 
 // =====================
 // DOM
