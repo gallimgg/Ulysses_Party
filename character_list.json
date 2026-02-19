@@ -1,0 +1,207 @@
+{
+  "characters": [
+    {
+      "id": 1,
+      "name": "Leopold Bloom",
+      "importance": "Main Character",
+      "occupation": "Ad canvasser",
+      "description": "Married to Molly Bloom. His son Rudy died 11 days after birth, which he blames himself for, leading to a decade-long withdrawal from intimacy. Molly is having an affair with Blazes Boylan, while Bloom maintains an emotional correspondence with Martha Clifford. He masturbates to Gerty MacDowell on the beach. Superstitious, he carries a shriveled potato taken by Zoe Higgins. During his visit to Bella Cohen's brothel, he experiences elaborate hallucinations including delusions of grandeur, a dominatrix fantasy, and a courtroom trial of his guilts."
+    },
+    {
+      "id": 2,
+      "name": "Stephen Dedalus",
+      "importance": "Main Character",
+      "occupation": "Schoolteacher",
+      "description": "A moody former Jesuit trainee and aspiring artist. Roommates and frenemy of Buck Mulligan. Struggles with faith following the recent death of his mother, May Dedalus. Deeply introspective and academically inclined."
+    },
+    {
+      "id": 3,
+      "name": "Simon Dedalus",
+      "importance": "Important Character",
+      "occupation": "Former city official",
+      "description": "Stephen’s father. Lost his position after Charles Parnell’s scandal. Now an alcoholic who fails to provide for his family. Skilled in wordplay and insults."
+    },
+    {
+      "id": 4,
+      "name": "Malachi \"Buck\" Mulligan",
+      "importance": "Important Character",
+      "occupation": "Medical student",
+      "description": "Wealthy and privileged. Lodges with Stephen and hosts Haines. Well-liked for bawdy humor, except by Stephen, Simon, and Bloom."
+    },
+    {
+      "id": 5,
+      "name": "The Citizen",
+      "importance": "Important Character",
+      "occupation": "Former athlete",
+      "description": "A xenophobic bar regular modeled on the Cyclops. Throws a biscuit tin at Bloom after a dispute in Barney Kiernan's Pub."
+    },
+    {
+      "id": 6,
+      "name": "Hugh \"Blazes\" Boylan",
+      "importance": "Important Character",
+      "occupation": "Event manager",
+      "description": "Molly Bloom’s tour manager and lover. Known as a dashing man about town."
+    },
+    {
+      "id": 7,
+      "name": "Haines",
+      "importance": "Important Character",
+      "occupation": "Oxford student",
+      "description": "Stays at Martello Tower to study Irish culture. Prone to night terrors and condescension."
+    },
+    {
+      "id": 8,
+      "name": "Mr. Deasey",
+      "importance": "Important Character",
+      "occupation": "Schoolmaster",
+      "description": "Stephen’s employer. Conservative and pro-British. Writes a mocked letter about foot-and-mouth disease."
+    },
+    {
+      "id": 9,
+      "name": "Patrick \"Paddy\" Dignam",
+      "importance": "Somewhat Important Character",
+      "occupation": "Former newspaperman",
+      "description": "Recently deceased alcoholic. His funeral occurs during the novel. Appears in Bloom’s hallucination claiming to be present by metempsychosis."
+    },
+    {
+      "id": 10,
+      "name": "Lenehan",
+      "importance": "Somewhat Important Character",
+      "occupation": "Racing tipster",
+      "description": "Freeloader and flirt. His horse tip loses while Bloom’s wins."
+    },
+    {
+      "id": 11,
+      "name": "A.E. (George Russell)",
+      "importance": "Important Character",
+      "occupation": "Poet",
+      "description": "Mystic poet of the Irish Literary Revival. Consulted like an oracle."
+    },
+    {
+      "id": 12,
+      "name": "Miles Crawford",
+      "importance": "Important Character",
+      "occupation": "Newspaper editor",
+      "description": "Head of the Freeman’s Journal newsroom. Impatient and drunken. Symbolically linked to Aeolus."
+    },
+    {
+      "id": 13,
+      "name": "Ritchie Goulding",
+      "importance": "Minor Character",
+      "occupation": "Accountant",
+      "description": "Simon Dedalus’s brother-in-law. Overstates his professional importance."
+    },
+    {
+      "id": 14,
+      "name": "Corny Kelleher",
+      "importance": "Important Character",
+      "occupation": "Undertaker’s assistant",
+      "description": "Jovial funeral arranger who frequently says, 'Do you follow me?'"
+    },
+    {
+      "id": 15,
+      "name": "Rudy Bloom",
+      "importance": "Minor Character",
+      "occupation": "Deceased child",
+      "description": "Bloom’s son who died 11 days after birth. Appears in Bloom’s hallucinations."
+    },
+    {
+      "id": 16,
+      "name": "Molly Bloom",
+      "importance": "Main Character",
+      "occupation": "Singer",
+      "description": "Married to Leopold Bloom. Having an affair with Boylan. Clever, opinionated, and frustrated by the lack of intimacy in her marriage."
+    },
+    {
+      "id": 17,
+      "name": "Gerty MacDowell",
+      "importance": "Important Character",
+      "occupation": "Unspecified",
+      "description": "Young woman with a limp. Meets Bloom’s gaze on the beach during a voyeuristic scene."
+    },
+    {
+      "id": 18,
+      "name": "May Dedalus",
+      "importance": "Important Character",
+      "occupation": "Homemaker",
+      "description": "Stephen’s deceased mother whose memory haunts him."
+    },
+    {
+      "id": 19,
+      "name": "Martha Clifford",
+      "importance": "Important Character",
+      "occupation": "Typist",
+      "description": "Bloom’s flirtatious pen pal under the alias Henry Flower."
+    },
+    {
+      "id": 20,
+      "name": "Mina Purefoy",
+      "importance": "Minor Character",
+      "occupation": "Mother",
+      "description": "Endures a prolonged labor before giving birth."
+    },
+    {
+      "id": 21,
+      "name": "Lydia Douce",
+      "importance": "Important Character",
+      "occupation": "Barmaid",
+      "description": "Flirtatious barmaid at the Ormond Hotel with a crush on Boylan."
+    },
+    {
+      "id": 22,
+      "name": "Mina Kennedy",
+      "importance": "Important Character",
+      "occupation": "Barmaid",
+      "description": "More reserved barmaid at the Ormond Hotel."
+    },
+    {
+      "id": 23,
+      "name": "Bella Cohen",
+      "importance": "Important Character",
+      "occupation": "Brothel owner",
+      "description": "Brothel-mistress who dominates Bloom in his hallucinations."
+    },
+    {
+      "id": 24,
+      "name": "Zoe Higgins",
+      "importance": "Minor Character",
+      "occupation": "Brothel worker",
+      "description": "Playful worker who takes Bloom’s potato."
+    },
+    {
+      "id": 25,
+      "name": "Mrs. Josie Breen",
+      "importance": "Minor Character",
+      "occupation": "Unspecified",
+      "description": "Former romantic interest of Bloom, now married to Denis Breen."
+    },
+    {
+      "id": 26,
+      "name": "Cissy Caffrey",
+      "importance": "Minor Character",
+      "occupation": "Caretaker",
+      "description": "Friend of Gerty, looking after younger children."
+    },
+    {
+      "id": 27,
+      "name": "Edy Boardman",
+      "importance": "Minor Character",
+      "occupation": "Unspecified",
+      "description": "Prudish friend of Gerty."
+    },
+    {
+      "id": 28,
+      "name": "Millicent \"Milly\" Bloom",
+      "importance": "Important Character",
+      "occupation": "Photographer",
+      "description": "Bloom’s 15-year-old daughter studying photography in Mullingar."
+    },
+    {
+      "id": 29,
+      "name": "Dilly Dedalus",
+      "importance": "Minor Character",
+      "occupation": "Student",
+      "description": "Stephen’s younger sister struggling after her mother’s death."
+    }
+  ]
+}
