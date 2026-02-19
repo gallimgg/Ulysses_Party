@@ -1,9 +1,13 @@
-// 1) CONFIG: paste yours from Supabase Project Settings -> API
+// =====================
+// CONFIG (Supabase)
+// =====================
 const SUPABASE_URL = "https://zxvsdhwgmhtmhjmaoadz.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_a7T2SKKrhnWqdV35YK8Wuw_h-auUpW9";
-
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// =====================
+// DOM
+// =====================
 const els = {
   userName: document.getElementById("userName"),
   grid: document.getElementById("characterGrid"),
@@ -12,8 +16,8 @@ const els = {
   refreshBtn: document.getElementById("refreshBtn"),
 };
 
-let characters = [];
-let picksById = new Map(); // character_id -> { character_id, character_name, user_name, picked_at }
+let characters = [];            // loaded from character_list.json
+let picksById = new Map();      // character_id -> pick row
 
 function setStatus(msg) {
   els.status.textContent = msg || "";
@@ -38,14 +42,34 @@ function genderLabel(id) {
   return "Unknown";
 }
 
+// =====================
+// LOAD CHARACTERS (local JSON)
+// =====================
 async function loadCharacters() {
   const res = await fetch("./character_list.json", { cache: "no-store" });
-  if (!res.ok) throw new Error("Could not load character_list.json");
+  if (!res.ok) throw new Error("Could not load character_list.json. Make sure it’s in the repo root.");
   const data = await res.json();
-  characters = Array.isArray(data.characters) ? data.characters : [];
-  characters.sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
+
+  if (!data || !Array.isArray(data.characters)) {
+    throw new Error("character_list.json must have a top-level { \"characters\": [...] } shape.");
+  }
+
+  // normalize + sort
+  characters = data.characters
+    .map(c => ({
+      id: Number(c.id),
+      name: c.name ?? "",
+      importance: c.importance ?? "",
+      occupation: c.occupation ?? "",
+      description: c.description ?? ""
+    }))
+    .filter(c => Number.isInteger(c.id))
+    .sort((a, b) => a.id - b.id);
 }
 
+// =====================
+// LOAD PICKS (Supabase)
+// =====================
 async function loadPicks() {
   const { data, error } = await supabase
     .from("character_picks")
@@ -58,10 +82,51 @@ async function loadPicks() {
   for (const row of data) picksById.set(row.character_id, row);
 }
 
+// =====================
+// RENDER
+// =====================
+function renderGrid() {
+  els.grid.innerHTML = "";
+
+  for (const c of characters) {
+    const taken = picksById.has(c.id);
+    const takenBy = taken ? picksById.get(c.id).user_name : null;
+
+    const card = document.createElement("div");
+    card.className = `character ${taken ? "taken" : ""}`;
+
+    const top = document.createElement("div");
+    top.className = "top";
+    top.innerHTML = `
+      <div>
+        <div class="name">${escapeHtml(c.name)} <span class="meta">(#${c.id})</span></div>
+        <div class="meta">${escapeHtml(c.importance)} • ${escapeHtml(c.occupation || "Unspecified")}</div>
+      </div>
+      <div class="meta">${escapeHtml(genderLabel(c.id))}</div>
+    `;
+
+    const desc = document.createElement("div");
+    desc.className = "desc";
+    desc.textContent = c.description;
+
+    const btn = document.createElement("button");
+    btn.className = "btn pick";
+    btn.type = "button";
+    btn.disabled = taken;
+    btn.textContent = taken ? `Taken by ${takenBy}` : "Pick this character";
+    btn.addEventListener("click", async () => pickCharacter(c));
+
+    card.appendChild(top);
+    card.appendChild(desc);
+    card.appendChild(btn);
+    els.grid.appendChild(card);
+  }
+}
+
 function renderAssignments() {
   els.assignments.innerHTML = "";
-  const picks = [...picksById.values()].sort((a, b) => a.character_id - b.character_id);
 
+  const picks = [...picksById.values()].sort((a, b) => a.character_id - b.character_id);
   if (picks.length === 0) {
     els.assignments.innerHTML = `<div class="assignment"><div class="what">No picks yet.</div></div>`;
     return;
@@ -78,44 +143,9 @@ function renderAssignments() {
   }
 }
 
-function renderGrid() {
-  els.grid.innerHTML = "";
-
-  for (const c of characters) {
-    const taken = picksById.has(c.id);
-    const takenBy = taken ? picksById.get(c.id).user_name : null;
-
-    const card = document.createElement("div");
-    card.className = `character ${taken ? "taken" : ""}`;
-
-    const top = document.createElement("div");
-    top.className = "top";
-    top.innerHTML = `
-      <div>
-        <div class="name">${escapeHtml(c.name)} <span class="meta">(#${c.id})</span></div>
-        <div class="meta">${escapeHtml(c.importance || "")} • ${escapeHtml(c.occupation || "Unspecified")}</div>
-      </div>
-      <div class="meta">${escapeHtml(genderLabel(c.id))}</div>
-    `;
-
-    const desc = document.createElement("div");
-    desc.className = "desc";
-    desc.textContent = c.description || "";
-
-    const btn = document.createElement("button");
-    btn.className = "btn pick";
-    btn.type = "button";
-    btn.disabled = taken;
-    btn.textContent = taken ? `Taken by ${takenBy}` : "Pick this character";
-    btn.addEventListener("click", async () => pickCharacter(c));
-
-    card.appendChild(top);
-    card.appendChild(desc);
-    card.appendChild(btn);
-    els.grid.appendChild(card);
-  }
-}
-
+// =====================
+// ACTION: PICK
+// =====================
 async function pickCharacter(character) {
   const userName = sanitizeName(els.userName.value);
   if (!userName) {
@@ -126,7 +156,7 @@ async function pickCharacter(character) {
 
   setStatus(`Saving your pick: ${character.name}...`);
 
-  // Primary key on character_id ensures only one pick per character.
+  // character_id is PRIMARY KEY in the table, so only one person can take each id.
   const { error } = await supabase.from("character_picks").insert([{
     character_id: character.id,
     character_name: character.name,
@@ -143,6 +173,9 @@ async function pickCharacter(character) {
   await refresh();
 }
 
+// =====================
+// REFRESH + LIVE UPDATES
+// =====================
 async function refresh() {
   await loadPicks();
   renderGrid();
@@ -152,7 +185,8 @@ async function refresh() {
 function subscribeRealtime() {
   supabase
     .channel("character-picks-live")
-    .on("postgres_changes",
+    .on(
+      "postgres_changes",
       { event: "*", schema: "public", table: "character_picks" },
       async () => {
         try { await refresh(); } catch (_) {}
@@ -161,11 +195,17 @@ function subscribeRealtime() {
     .subscribe();
 }
 
+// =====================
+// BOOT
+// =====================
 async function boot() {
   try {
-    setStatus("Loading...");
+    setStatus("Loading characters...");
     await loadCharacters();
+
+    setStatus("Loading current picks...");
     await refresh();
+
     setStatus("");
 
     els.refreshBtn.addEventListener("click", async () => {
