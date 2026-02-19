@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Entangled Ulysses Character Picker</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Supabase JS (UMD build) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h1>Choose Your Entangled Ulysses Character</h1>
+      <p class="subhead">1. Enter Your Name to Link to Your Character</p>
+      <p class="subhead">2. Choose Your Character</p>
+      <p class="note">Characters 1-15 are Male; 16-29 are Female</p>
+    </header>
+
+    <section class="card">
+      <label class="label" for="userName">Your name</label>
+      <input id="userName" class="input" type="text" placeholder="e.g., Grant" maxlength="60" />
+      <div class="actions">
+        <button id="refreshBtn" class="btn secondary" type="button">Refresh</button>
+      </div>
+      <div id="status" class="status" aria-live="polite"></div>
+    </section>
+
+    <section class="grid-wrap">
+      <div class="grid-header">
+        <h2>Characters</h2>
+        <div class="legend">
+          <span class="dot available"></span><span>Available</span>
+          <span class="dot taken"></span><span>Taken</span>
+        </div>
+      </div>
+
+      <div id="characterGrid" class="grid"></div>
+    </section>
+
+    <section class="card">
+      <h2>Current Assignments</h2>
+      <div id="assignments" class="assignments"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
