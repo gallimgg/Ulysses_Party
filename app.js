@@ -204,10 +204,20 @@ async function boot() {
     setStatus("Loading characters...");
     await loadCharacters();
 
-    setStatus("Loading current picks...");
-    await refresh();
+    // ✅ Render characters immediately (assume all available until picks load)
+    picksById = new Map();
+    renderGrid();
+    renderAssignments();
 
-    setStatus("");
+    setStatus("Loading current picks...");
+    try {
+      await refresh();
+      setStatus("");
+    } catch (e) {
+      console.error(e);
+      // ✅ Still show characters; just warn that picks couldn't load
+      setStatus(`Characters loaded, but picks couldn't load: ${e.message || e}`);
+    }
 
     els.refreshBtn.addEventListener("click", async () => {
       try {
@@ -227,3 +237,4 @@ async function boot() {
 }
 
 boot();
+
