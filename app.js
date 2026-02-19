@@ -1,6 +1,6 @@
 // 1) CONFIG: paste yours from Supabase Project Settings -> API
-const SUPABASE_URL = "PASTE_YOUR_SUPABASE_PROJECT_URL";
-const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_PUBLIC_KEY";
+const SUPABASE_URL = "https://zxvsdhwgmhtmhjmaoadz.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_a7T2SKKrhnWqdV35YK8Wuw_h-auUpW9";
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
