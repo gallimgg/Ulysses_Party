@@ -1,6 +1,9 @@
 // =====================
 // CONFIG (Supabase)
 // =====================
+console.log("app.js loaded at", new Date().toISOString());
+
+
 const SUPABASE_URL = "https://zxvsdhwgmhtmhjmaoadz.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_a7T2SKKrhnWqdV35YK8Wuw_h-auUpW9";
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
