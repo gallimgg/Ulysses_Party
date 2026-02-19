@@ -46,9 +46,8 @@ function genderLabel(id) {
 // LOAD CHARACTERS (local JSON)
 // =====================
 async function loadCharacters() {
-  const res = await fetch(`./character_list.json?ts=${Date.now()}`, {
-  cache: "no-store"
-});
+  const res = await fetch(`./character_list.json?ts=${Date.now()}`, { cache: "no-store" });
+
   if (!res.ok) throw new Error("Could not load character_list.json. Make sure it’s in the repo root.");
   const data = await res.json();
 
