@@ -200,6 +200,7 @@ sb
     async () => { try { await refresh(); } catch (_) {} }
   )
   .subscribe();
+}
 
 // =====================
 // BOOT
@@ -242,4 +243,3 @@ async function boot() {
 }
 
 boot();
-
