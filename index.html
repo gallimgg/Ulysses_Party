@@ -7,8 +7,6 @@
 
   <link rel="stylesheet" href="./styles.css" />
 
-  <!-- Supabase JS (UMD build) -->
-  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
   <main class="container">
@@ -54,6 +52,15 @@
 
   <!-- Load local data before app.js so window.CHARACTER_LIST is available -->
   <script src="./character_list.js?v=1"></script>
+    <!-- Local data first -->
+  <script src="./character_list.js?v=1"></script>
+
+  <!-- Supabase UMD (must load BEFORE app.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <!-- App last -->
+  <script src="./app.js?v=1"></script>
+
   <script src="./app.js?v=1"></script>
 </body>
 </html>
