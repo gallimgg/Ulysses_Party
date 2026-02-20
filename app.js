@@ -44,11 +44,11 @@ function sanitizeName(raw) {
 
 function escapeHtml(s) {
   return String(s ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 function genderLabel(id) {
@@ -63,16 +63,13 @@ function genderLabel(id) {
 async function loadCharacters() {
   let data = null;
 
-  try {
+  // Prefer bundled data so characters still render in restricted environments.
+  if (window.CHARACTER_LIST && Array.isArray(window.CHARACTER_LIST.characters)) {
+    data = window.CHARACTER_LIST;
+  } else {
     const res = await fetch(`./character_list.json?ts=${Date.now()}`, { cache: "no-store" });
     if (!res.ok) throw new Error("Could not load character_list.json. Make sure it’s in the repo root.");
     data = await res.json();
-  } catch (err) {
-    if (window.CHARACTER_LIST && Array.isArray(window.CHARACTER_LIST.characters)) {
-      data = window.CHARACTER_LIST;
-    } else {
-      throw err;
-    }
   }
 
   if (!data || !Array.isArray(data.characters)) {
