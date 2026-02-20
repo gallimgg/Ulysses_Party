@@ -8,9 +8,16 @@ const SUPABASE_URL = "https://zxvsdhwgmhtmhjmaoadz.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_a7T2SKKrhnWqdV35YK8Wuw_h-auUpW9";
 
 // IMPORTANT: don't name any variable `supabase`
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
-});
+let sb = null;
+
+function initSupabaseClient() {
+  const hasSupabase = !!(window.supabase && typeof window.supabase.createClient === "function");
+  if (!hasSupabase) return null;
+
+  return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+  });
+}
 
 
 // =====================
@@ -54,13 +61,22 @@ function genderLabel(id) {
 // LOAD CHARACTERS (local JSON)
 // =====================
 async function loadCharacters() {
-  const res = await fetch(`./character_list.json?ts=${Date.now()}`, { cache: "no-store" });
+  let data = null;
 
-  if (!res.ok) throw new Error("Could not load character_list.json. Make sure it’s in the repo root.");
-  const data = await res.json();
+  try {
+    const res = await fetch(`./character_list.json?ts=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) throw new Error("Could not load character_list.json. Make sure it’s in the repo root.");
+    data = await res.json();
+  } catch (err) {
+    if (window.CHARACTER_LIST && Array.isArray(window.CHARACTER_LIST.characters)) {
+      data = window.CHARACTER_LIST;
+    } else {
+      throw err;
+    }
+  }
 
   if (!data || !Array.isArray(data.characters)) {
-    throw new Error("character_list.json must have a top-level { \"characters\": [...] } shape.");
+    throw new Error("character_list data must have a top-level { \"characters\": [...] } shape.");
   }
 
   // normalize + sort
@@ -76,15 +92,20 @@ async function loadCharacters() {
     .sort((a, b) => a.id - b.id);
 }
 
+
 // =====================
 // LOAD PICKS (Supabase)
 // =====================
 async function loadPicks() {
-  const { data, error } = await sb
-  .from("character_picks")
-  .select("character_id, character_name, user_name, picked_at")
-  .order("character_id", { ascending: true });
+  if (!sb) {
+    picksById = new Map();
+    return;
+  }
 
+  const { data, error } = await sb
+    .from("character_picks")
+    .select("character_id, character_name, user_name, picked_at")
+    .order("character_id", { ascending: true });
 
   if (error) throw error;
 
@@ -164,6 +185,11 @@ async function pickCharacter(character) {
     return;
   }
 
+  if (!sb) {
+    setStatus("Supabase is not available right now, so picks cannot be saved.");
+    return;
+  }
+
   setStatus(`Saving your pick: ${character.name}...`);
 
   // character_id is PRIMARY KEY in the table, so only one person can take each id.
@@ -193,19 +219,24 @@ async function refresh() {
 }
 
 function subscribeRealtime() {
-sb
-  .channel("character-picks-live")
-  .on("postgres_changes",
-    { event: "*", schema: "public", table: "character_picks" },
-    async () => { try { await refresh(); } catch (_) {} }
-  )
-  .subscribe();
+  if (!sb) return;
+
+  sb
+    .channel("character-picks-live")
+    .on("postgres_changes",
+      { event: "*", schema: "public", table: "character_picks" },
+      async () => { try { await refresh(); } catch (_) {} }
+    )
+    .subscribe();
+}
 
 // =====================
 // BOOT
 // =====================
 async function boot() {
   try {
+    sb = initSupabaseClient();
+
     setStatus("Loading characters...");
     await loadCharacters();
 
@@ -222,6 +253,10 @@ async function boot() {
       console.error(e);
       // ✅ Still show characters; just warn that picks couldn't load
       setStatus(`Characters loaded, but picks couldn't load: ${e.message || e}`);
+    }
+
+    if (!sb) {
+      setStatus("Characters loaded, but Supabase failed to initialize (check internet/CDN/script blocking).");
     }
 
     els.refreshBtn.addEventListener("click", async () => {
@@ -242,4 +277,3 @@ async function boot() {
 }
 
 boot();
-
